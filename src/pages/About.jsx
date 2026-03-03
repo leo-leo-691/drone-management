@@ -1,6 +1,7 @@
 import { Header, Footer } from "../components/index.js";
 import { useData } from "../context/DataContext";
 import { Phone, Mail, Users } from "lucide-react";
+import { groupPhoto } from "../assets/index.js";
 
 export default function About() {
   const { rounds } = useData();
@@ -47,7 +48,7 @@ export default function About() {
           {/* Committee Photo */}
           <div className="relative group w-full aspect-video md:aspect-21/9 rounded-2xl overflow-hidden border border-white/10 shadow-2xl mb-16">
             <img
-              src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=2070"
+              src={groupPhoto}
               alt="Organisation Committee"
               className="w-full h-full object-cover group-hover:grayscale-0 transition-all duration-700 ease-in-out scale-105 group-hover:scale-100"
             />
