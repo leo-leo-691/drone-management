@@ -37,7 +37,7 @@ export default function TeamManager({ teams }) {
   };
 
   return (
-    <div className="p-4 md:p-6">
+    <div className="p-4 md:p-6 min-h-screen">
       <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-8 md:mb-10 pb-6 border-b border-white/5">
         <div className="flex flex-col items-center md:items-start text-center md:text-left">
           <h3 className="text-xl md:text-2xl font-black italic tracking-tighter text-white uppercase flex items-center gap-3">
@@ -53,11 +53,10 @@ export default function TeamManager({ teams }) {
 
         <button
           onClick={() => setShowAdd(!showAdd)}
-          className={`group relative overflow-hidden px-6 py-2.5 rounded-xl font-black uppercase tracking-widest text-xs transition-all duration-300 ${
-            showAdd
-              ? "bg-destructive/10 border border-destructive/30 text-destructive hover:bg-destructive/20"
-              : "bg-neon text-background shadow-[0_0_20px_rgba(0,240,255,0.2)] hover:scale-105 active:scale-95"
-          }`}
+          className={`group relative overflow-hidden px-6 py-2.5 rounded-xl font-black uppercase tracking-widest text-xs transition-all duration-300 ${showAdd
+            ? "bg-destructive/10 border border-destructive/30 text-destructive hover:bg-destructive/20"
+            : "bg-neon text-background shadow-[0_0_20px_rgba(0,240,255,0.2)] hover:scale-105 active:scale-95"
+            }`}
         >
           <span className="relative z-10">
             {showAdd ? "Abort Command" : "Initiate New Squad"}
@@ -96,11 +95,10 @@ export default function TeamManager({ teams }) {
         {teams.map((team) => (
           <div
             key={team.id}
-            className={`group relative flex flex-col gap-6 p-6 rounded-2xl border transition-all duration-500 hover:scale-[1.02] ${
-              team.status === "Disqualified"
-                ? "border-destructive/30 bg-destructive/[0.02] hover:border-destructive/50"
-                : "border-glass-border bg-white/[0.02] hover:border-neon/30"
-            }`}
+            className={`group relative flex flex-col gap-6 p-6 rounded-2xl border transition-all duration-500 hover:scale-[1.02] ${team.status === "Disqualified"
+              ? "border-destructive/30 bg-destructive/[0.02] hover:border-destructive/50"
+              : "border-glass-border bg-white/[0.02] hover:border-neon/30"
+              }`}
           >
             {/* Header */}
             <div className="flex justify-between items-start gap-4">
@@ -120,13 +118,12 @@ export default function TeamManager({ teams }) {
                   <select
                     value={team.status}
                     onChange={(e) => handleStatusChange(team, e.target.value)}
-                    className={`appearance-none text-[9px] font-black tracking-[0.2em] px-3 py-1.5 rounded-lg border transition-all duration-300 cursor-pointer outline-none ${
-                      team.status === "Active"
-                        ? "bg-green-500/10 text-green-400 border-green-500/30 hover:bg-green-500/20 shadow-[0_0_10px_rgba(74,222,128,0.1)]"
-                        : team.status === "Disqualified"
-                          ? "bg-destructive/10 text-destructive border-destructive/30 hover:bg-destructive/20 shadow-[0_0_10px_rgba(255,61,90,0.1)]"
-                          : "bg-white/5 text-muted-foreground border-white/10 hover:bg-white/10"
-                    }`}
+                    className={`appearance-none text-[9px] font-black tracking-[0.2em] px-3 py-1.5 rounded-lg border transition-all duration-300 cursor-pointer outline-none ${team.status === "Active"
+                      ? "bg-green-500/10 text-green-400 border-green-500/30 hover:bg-green-500/20 shadow-[0_0_10px_rgba(74,222,128,0.1)]"
+                      : team.status === "Disqualified"
+                        ? "bg-destructive/10 text-destructive border-destructive/30 hover:bg-destructive/20 shadow-[0_0_10px_rgba(255,61,90,0.1)]"
+                        : "bg-white/5 text-muted-foreground border-white/10 hover:bg-white/10"
+                      }`}
                   >
                     <option value="Active">Active</option>
                     <option value="Eliminated">Eliminated</option>
@@ -186,7 +183,7 @@ export default function TeamManager({ teams }) {
 
               <div className="flex justify-between items-center pt-4 border-t border-white/5">
                 {team.status === "Eliminated" ||
-                team.status === "Disqualified" ? (
+                  team.status === "Disqualified" ? (
                   <button
                     onClick={() => setReEntryTeam(team)}
                     className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-[#00d4ff] hover:text-[#00f5ff] transition-all duration-300 group/re"

@@ -41,7 +41,7 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-[#050a0f] text-foreground relative overflow-hidden">
+    <div className="min-h-screen bg-[#050a0f] text-foreground relative overflow-hidden py-6">
       {/* Ambient Background Glows */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-neon/5 rounded-full blur-[120px]" />
@@ -67,41 +67,37 @@ export default function AdminDashboard() {
             <nav className="flex items-center p-1 bg-black/40 rounded-xl border border-glass-border w-full md:w-auto overflow-x-auto no-scrollbar">
               <button
                 onClick={() => setActiveTab("rounds")}
-                className={`flex items-center justify-center gap-2 px-3 py-2 md:px-6 md:py-2.5 rounded-lg transition-all duration-300 font-bold uppercase tracking-wider text-[10px] md:text-xs whitespace-nowrap flex-1 md:flex-initial ${
-                  activeTab === "rounds"
+                className={`flex items-center justify-center gap-2 px-3 py-2 md:px-6 md:py-2.5 rounded-lg transition-all duration-300 font-bold uppercase tracking-wider text-[10px] md:text-xs whitespace-nowrap flex-1 md:flex-initial ${activeTab === "rounds"
                     ? "bg-neon text-background shadow-[0_0_20px_rgba(0,240,255,0.3)] scale-[1.02]"
                     : "text-muted-foreground hover:text-white hover:bg-white/5"
-                }`}
+                  }`}
               >
                 <LayoutDashboard size={14} /> Rounds
               </button>
               <button
                 onClick={() => setActiveTab("teams")}
-                className={`flex items-center justify-center gap-2 px-3 py-2 md:px-6 md:py-2.5 rounded-lg transition-all duration-300 font-bold uppercase tracking-wider text-[10px] md:text-xs whitespace-nowrap flex-1 md:flex-initial ${
-                  activeTab === "teams"
+                className={`flex items-center justify-center gap-2 px-3 py-2 md:px-6 md:py-2.5 rounded-lg transition-all duration-300 font-bold uppercase tracking-wider text-[10px] md:text-xs whitespace-nowrap flex-1 md:flex-initial ${activeTab === "teams"
                     ? "bg-neon text-background shadow-[0_0_20px_rgba(0,240,255,0.3)] scale-[1.02]"
                     : "text-muted-foreground hover:text-white hover:bg-white/5"
-                }`}
+                  }`}
               >
                 <Users size={14} /> Teams
               </button>
               <button
                 onClick={() => setActiveTab("events")}
-                className={`flex items-center justify-center gap-2 px-3 py-2 md:px-6 md:py-2.5 rounded-lg transition-all duration-300 font-bold uppercase tracking-wider text-[10px] md:text-xs whitespace-nowrap flex-1 md:flex-initial ${
-                  activeTab === "events"
+                className={`flex items-center justify-center gap-2 px-3 py-2 md:px-6 md:py-2.5 rounded-lg transition-all duration-300 font-bold uppercase tracking-wider text-[10px] md:text-xs whitespace-nowrap flex-1 md:flex-initial ${activeTab === "events"
                     ? "bg-neon text-background shadow-[0_0_20px_rgba(0,240,255,0.3)] scale-[1.02]"
                     : "text-muted-foreground hover:text-white hover:bg-white/5"
-                }`}
+                  }`}
               >
                 <MessageSquare size={14} /> Events
               </button>
               <button
                 onClick={() => setActiveTab("arena")}
-                className={`flex items-center justify-center gap-2 px-3 py-2 md:px-6 md:py-2.5 rounded-lg transition-all duration-300 font-bold uppercase tracking-wider text-[10px] md:text-xs whitespace-nowrap flex-1 md:flex-initial ${
-                  activeTab === "arena"
+                className={`flex items-center justify-center gap-2 px-3 py-2 md:px-6 md:py-2.5 rounded-lg transition-all duration-300 font-bold uppercase tracking-wider text-[10px] md:text-xs whitespace-nowrap flex-1 md:flex-initial ${activeTab === "arena"
                     ? "bg-neon text-background shadow-[0_0_20px_rgba(0,240,255,0.3)] scale-[1.02]"
                     : "text-muted-foreground hover:text-white hover:bg-white/5"
-                }`}
+                  }`}
               >
                 <Thermometer size={14} /> Arena
               </button>
