@@ -1,40 +1,9 @@
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
-    
-    // Helper function to check auth
-    function isAdmin() {
-      return request.auth != null;
-    }
-
-    // Rounds: Public read if visible or if admin. Write only admin.
-    match /rounds/{roundId} {
-      allow read: if resource.data.visible == true || isAdmin();
-      allow write: if isAdmin();
-      
-      // Obstacles Subcollection: Public read if round is visible. Write only admin.
-      match /obstacles/{obsId} {
-        allow read: if get(/databases/$(database)/documents/rounds/$(roundId)).data.visible == true || isAdmin();
-        allow write: if isAdmin();
-      }
-    }
-
-    // Teams: Public read always (leaderboard). Write only admin.
-    match /teams/{teamId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-
-    // Settings: Public read. Write only admin.
-    match /settings/{setId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-
-    // Events: Public read. Write only admin.
-    match /events/{eventId} {
-      allow read: if true;
-      allow write: if isAdmin();
+    match /{document=**} {
+      allow read, write: if true;
     }
   }
 }

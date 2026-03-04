@@ -256,20 +256,20 @@ export default function Leaderboard({ teams = [], rounds = [] }) {
                 <div className="hidden md:flex items-center gap-4 text-[10px] font-mono text-muted-foreground">
                   {[
                     {
-                      score: team.roundDetails?.round1.score,
-                      time: team.roundDetails?.round1.time,
+                      score: team.roundDetails?.round1?.score,
+                      time: team.roundDetails?.round1?.time,
                       label: "R1",
                       isPublished: publishedRoundIds.includes("round1"),
                     },
                     {
-                      score: team.roundDetails?.round2.score,
-                      time: team.roundDetails?.round2.time,
+                      score: team.roundDetails?.round2?.score,
+                      time: team.roundDetails?.round2?.time,
                       label: "R2",
                       isPublished: publishedRoundIds.includes("round2"),
                     },
                     {
-                      score: team.roundDetails?.round3.score,
-                      time: team.roundDetails?.round3.score,
+                      score: team.roundDetails?.round3?.score,
+                      time: team.roundDetails?.round3?.score,
                       label: "R3",
                       isPublished: publishedRoundIds.includes("round3"),
                     },

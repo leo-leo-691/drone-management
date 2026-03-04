@@ -31,7 +31,7 @@ export default function ObstacleModal({ obstacle, onClose }) {
               <img
                 src={obstacle.imageURL}
                 alt={obstacle.name}
-                className="w-full h-full object-contain p-4"
+                className="w-full max-h-[40vh] object-contain p-4"
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center opacity-20">
