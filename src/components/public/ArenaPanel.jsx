@@ -67,7 +67,7 @@ export default function ArenaPanel({ teams = [] }) {
             Live Stream
           </span>
         </div>
-        <div className="divide-y divide-glass-border max-h-[260px] overflow-y-auto scrollbar-thin scrollbar-thumb-neon/20 scrollbar-track-transparent">
+        <div className="divide-y divide-glass-border max-h-40 overflow-y-auto scrollbar-thin scrollbar-thumb-neon/20 scrollbar-track-transparent">
           {events.map((entry) => (
             <div
               key={entry.id}
@@ -77,13 +77,12 @@ export default function ArenaPanel({ teams = [] }) {
                 {entry.time}
               </span>
               <span
-                className={`text-xs font-mono leading-relaxed ${
-                  entry.type === "highlight"
-                    ? "text-neon"
-                    : entry.type === "warning"
-                      ? "text-gold"
-                      : "text-muted-foreground"
-                }`}
+                className={`text-xs font-mono leading-relaxed ${entry.type === "highlight"
+                  ? "text-neon"
+                  : entry.type === "warning"
+                    ? "text-gold"
+                    : "text-muted-foreground"
+                  }`}
               >
                 {entry.event}
               </span>

@@ -129,12 +129,12 @@ export default function Leaderboard({ teams = [], rounds = [] }) {
           return (
             <div
               key={team.id}
-              className={`group relative overflow-hidden rounded-xl border ${colors.border} ${colors.bg} ${colors.glow} backdrop-blur-xl p-4 transition-all duration-300 hover:scale-[1.01]`}
+              className={`group relative overflow-hidden rounded-xl border ${colors.border} ${colors.bg} ${colors.glow} backdrop-blur-xl p-3 transition-all duration-300 hover:scale-[1.01]`}
             >
               {/* Rank Badge + Team Info */}
               <div className="flex items-start gap-3">
                 <div
-                  className={`flex items-center justify-center w-9 h-9 rounded-lg ${colors.badge} text-sm font-bold font-mono shrink-0`}
+                  className={`flex items-center justify-center w-7 h-7 rounded-md ${colors.badge} text-xs font-bold font-mono shrink-0`}
                 >
                   {team.displayRank}
                 </div>
@@ -158,7 +158,7 @@ export default function Leaderboard({ teams = [], rounds = [] }) {
                 </div>
                 <div className="text-right shrink-0">
                   <p
-                    className={`text-lg font-bold font-mono tabular-nums ${colors.text}`}
+                    className={`text-base font-bold font-mono tabular-nums ${colors.text}`}
                   >
                     {team.effectiveStats.score.toLocaleString()}
                   </p>
@@ -169,7 +169,7 @@ export default function Leaderboard({ teams = [], rounds = [] }) {
               </div>
 
               {/* Stats Row */}
-              <div className="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-glass-border">
+              <div className="grid grid-cols-3 gap-2 mt-2.5 pt-2.5 border-t border-glass-border">
                 {[
                   {
                     score: team.roundDetails?.round1?.score,
@@ -194,7 +194,7 @@ export default function Leaderboard({ teams = [], rounds = [] }) {
                     <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider">
                       {round.label}
                     </span>
-                    <span className="text-sm font-bold text-foreground">
+                    <span className="text-xs font-bold text-foreground">
                       {round.isPublished ? round.score || 0 : "--"}
                     </span>
                     <div className="flex items-center gap-1 text-muted-foreground">
