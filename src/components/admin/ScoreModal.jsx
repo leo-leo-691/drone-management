@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { subscribeObstacles, updateTeam } from "../../services/db";
 import { getDoc, doc } from "firebase/firestore";
 import { db } from "../../lib/firebase";
@@ -177,7 +178,7 @@ export default function ScoreModal({ team, roundId, onClose }) {
 
   if (!team || !roundId) return null;
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
         className="absolute inset-0 bg-[#050a0f]/80 backdrop-blur-md"
@@ -385,6 +386,7 @@ export default function ScoreModal({ team, roundId, onClose }) {
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

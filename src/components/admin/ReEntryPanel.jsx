@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { updateTeam } from "../../services/db";
 import { RotateCcw, AlertTriangle } from "lucide-react";
 
@@ -54,7 +55,7 @@ export default function ReEntryPanel({ team, onClose }) {
     }
   };
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
         className="absolute inset-0 bg-[#050a0f]/80 backdrop-blur-md"
@@ -137,6 +138,7 @@ export default function ReEntryPanel({ team, onClose }) {
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
