@@ -15,7 +15,7 @@ import { Header, Footer } from "../components";
 import { useData } from "../context/DataContext";
 
 // --- Team List Component ---
-const TeamList = ({ teams }) => {
+const TeamList = ({ teams, rounds }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const filteredTeams = teams.filter((team) =>
@@ -78,69 +78,83 @@ const TeamList = ({ teams }) => {
 
         {/* Teams Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredTeams.map((team) => (
-            <Link
-              key={team.id}
-              to={`/report/${team.id}`}
-              className="group relative"
-            >
-              <div className="absolute -inset-0.5 bg-linear-to-br from-neon/50 to-transparent rounded-3xl blur-sm opacity-0 group-hover:opacity-100 transition duration-500" />
-              <div className="relative bg-glass border border-glass-border p-3 rounded-2xl hover:border-neon/30 transition-all duration-300 overflow-hidden">
-                {/* Background Pattern */}
-                <div className="absolute top-0 right-0 p-3 text-white/2 -mr-4 -mt-4 rotate-12">
-                  <FileText size={64} />
-                </div>
+          {filteredTeams.map((team) => {
+            // Recalculate totals based on published rounds
+            const publishedRounds = rounds.filter((r) => r.published);
+            let publishedScore = 0;
+            let publishedTime = 0;
 
-                <div className="flex justify-between items-start mb-4">
-                  <div className="space-y-1">
-                    <span className="text-[8px] font-mono font-bold text-muted-foreground uppercase tracking-widest">
-                      Callsign
-                    </span>
-                    <h3 className="text-lg font-black italic tracking-tighter text-white uppercase group-hover:text-neon transition-colors">
-                      {team.name}
-                    </h3>
+            publishedRounds.forEach((r) => {
+              const details = team.roundDetails?.[r.id] || {};
+              publishedScore += details.score || 0;
+              publishedTime += details.time || 0;
+            });
+
+            return (
+              <Link
+                key={team.id}
+                to={`/report/${team.id}`}
+                className="group relative"
+              >
+                <div className="absolute -inset-0.5 bg-linear-to-br from-neon/50 to-transparent rounded-3xl blur-sm opacity-0 group-hover:opacity-100 transition duration-500" />
+                <div className="relative bg-glass border border-glass-border p-3 rounded-2xl hover:border-neon/30 transition-all duration-300 overflow-hidden">
+                  {/* Background Pattern */}
+                  <div className="absolute top-0 right-0 p-3 text-white/2 -mr-4 -mt-4 rotate-12">
+                    <FileText size={64} />
                   </div>
-                  <div
-                    className={`px-2 py-0.5 rounded-full text-[7px] font-mono font-bold uppercase tracking-widest border ${team.status === "Active"
-                      ? "bg-neon/10 border-neon/20 text-neon"
-                      : "bg-destructive/10 border-destructive/20 text-destructive"
+
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="space-y-1">
+                      <span className="text-[8px] font-mono font-bold text-muted-foreground uppercase tracking-widest">
+                        Callsign
+                      </span>
+                      <h3 className="text-lg font-black italic tracking-tighter text-white uppercase group-hover:text-neon transition-colors">
+                        {team.name}
+                      </h3>
+                    </div>
+                    <div
+                      className={`px-2 py-0.5 rounded-full text-[7px] font-mono font-bold uppercase tracking-widest border ${
+                        team.status === "Active"
+                          ? "bg-neon/10 border-neon/20 text-neon"
+                          : "bg-destructive/10 border-destructive/20 text-destructive"
                       }`}
-                  >
-                    {team.status}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3 mb-4">
-                  <div className="space-y-0.5">
-                    <span className="text-[7px] font-mono text-muted-foreground/60 uppercase">
-                      Aggregated Points
-                    </span>
-                    <div className="text-base font-black italic tracking-tighter text-white">
-                      {team.totalScore || 0}
+                    >
+                      {team.status}
                     </div>
                   </div>
-                  <div className="space-y-0.5">
-                    <span className="text-[7px] font-mono text-muted-foreground/60 uppercase">
-                      Total Mission Time
-                    </span>
-                    <div className="text-base font-black italic tracking-tighter text-white">
-                      {team.totalTime || 0}s
+
+                  <div className="grid grid-cols-2 gap-3 mb-4">
+                    <div className="space-y-0.5">
+                      <span className="text-[7px] font-mono text-muted-foreground/60 uppercase">
+                        Aggregated Points
+                      </span>
+                      <div className="text-base font-black italic tracking-tighter text-white">
+                        {publishedScore}
+                      </div>
+                    </div>
+                    <div className="space-y-0.5">
+                      <span className="text-[7px] font-mono text-muted-foreground/60 uppercase">
+                        Total Mission Time
+                      </span>
+                      <div className="text-base font-black italic tracking-tighter text-white">
+                        {publishedTime}s
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div className="pt-3 border-t border-white/5 flex items-center justify-between">
-                  <span className="text-[8px] font-mono font-bold text-neon uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all transform translate-x-[-10px] group-hover:translate-x-0">
-                    Access Report Intelligence
-                  </span>
-                  <ChevronRight
-                    size={14}
-                    className="text-muted-foreground group-hover:text-neon transform group-hover:translate-x-1 transition-all"
-                  />
+                  <div className="pt-3 border-t border-white/5 flex items-center justify-between">
+                    <span className="text-[8px] font-mono font-bold text-neon uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all transform translate-x-[-10px] group-hover:translate-x-0">
+                      Access Report Intelligence
+                    </span>
+                    <ChevronRight
+                      size={14}
+                      className="text-muted-foreground group-hover:text-neon transform group-hover:translate-x-1 transition-all"
+                    />
+                  </div>
                 </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
         </div>
 
         {filteredTeams.length === 0 && (
@@ -154,12 +168,12 @@ const TeamList = ({ teams }) => {
           </div>
         )}
       </div>
-    </div >
+    </div>
   );
 };
 
 // --- Team Report Details Component ---
-const TeamReport = ({ teams }) => {
+const TeamReport = ({ teams, rounds: allRounds }) => {
   const { teamId } = useParams();
   const navigate = useNavigate();
   const team = teams.find((t) => t.id === teamId);
@@ -168,7 +182,19 @@ const TeamReport = ({ teams }) => {
     return <NotFound />;
   }
 
-  const rounds = ["round1", "round2", "round3"];
+  const publishedRounds = allRounds
+    .filter((r) => r.published)
+    .sort((a, b) => a.id.localeCompare(b.id));
+
+  // Recalculate totals based on published rounds
+  let publishedScore = 0;
+  let publishedTime = 0;
+
+  publishedRounds.forEach((r) => {
+    const details = team.roundDetails?.[r.id] || {};
+    publishedScore += details.score || 0;
+    publishedTime += details.time || 0;
+  });
 
   const getRoundStats = (roundId) => {
     const details = team.roundDetails?.[roundId] || {};
@@ -231,8 +257,9 @@ const TeamReport = ({ teams }) => {
                 Aggregated Status
               </span>
               <div
-                className={`text-2xl font-black italic tracking-tighter uppercase ${team.status === "Active" ? "text-neon" : "text-destructive"
-                  }`}
+                className={`text-2xl font-black italic tracking-tighter uppercase ${
+                  team.status === "Active" ? "text-neon" : "text-destructive"
+                }`}
               >
                 {team.status}
               </div>
@@ -248,7 +275,7 @@ const TeamReport = ({ teams }) => {
                 <Trophy size={12} className="text-gold" /> Total Points Score
               </span>
               <div className="text-2xl font-black italic tracking-tighter text-gold">
-                {team.totalScore || 0}
+                {publishedScore}
               </div>
             </div>
             <div className="hidden sm:block">
@@ -263,7 +290,7 @@ const TeamReport = ({ teams }) => {
                 <Clock size={12} className="text-neon" /> Cumulative Duration
               </span>
               <div className="text-2xl font-black italic tracking-tighter text-neon">
-                {team.totalTime || 0}
+                {publishedTime}
                 <span className="text-lg ml-1">s</span>
               </div>
             </div>
@@ -285,20 +312,21 @@ const TeamReport = ({ teams }) => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {rounds.map((rid, idx) => {
-              const stats = getRoundStats(rid);
+            {publishedRounds.map((round, idx) => {
+              const stats = getRoundStats(round.id);
               const isDQ = stats.groundTouches >= 3;
 
               return (
                 <div
-                  key={rid}
+                  key={round.id}
                   className={`relative group ${isDQ ? "opacity-70" : ""}`}
                 >
                   <div
-                    className={`absolute -inset-0.5 rounded-[2.5rem] blur opacity-10 group-hover:opacity-20 transition duration-500 bg-linear-to-b ${isDQ
-                      ? "from-destructive to-transparent"
-                      : "from-neon to-transparent"
-                      }`}
+                    className={`absolute -inset-0.5 rounded-[2.5rem] blur opacity-10 group-hover:opacity-20 transition duration-500 bg-linear-to-b ${
+                      isDQ
+                        ? "from-destructive to-transparent"
+                        : "from-neon to-transparent"
+                    }`}
                   />
                   <div className="relative bg-glass border border-glass-border p-5 rounded-3xl space-y-4">
                     {/* Round Label */}
@@ -308,7 +336,7 @@ const TeamReport = ({ teams }) => {
                           Phase 0{idx + 1}
                         </span>
                         <h3 className="text-xl font-black italic tracking-tighter text-white uppercase">
-                          ROUND {idx + 1}
+                          {round.title?.toUpperCase() || `ROUND ${idx + 1}`}
                         </h3>
                       </div>
                       {isDQ && (
@@ -426,8 +454,11 @@ export default function Reports() {
 
       <main className="flex-1">
         <Routes>
-          <Route index element={<TeamList teams={teams} />} />
-          <Route path=":teamId" element={<TeamReport teams={teams} />} />
+          <Route index element={<TeamList teams={teams} rounds={rounds} />} />
+          <Route
+            path=":teamId"
+            element={<TeamReport teams={teams} rounds={rounds} />}
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

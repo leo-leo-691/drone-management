@@ -28,7 +28,7 @@ export const initRounds = async () => {
           id === "round1" ? "Round 1" : id === "round2" ? "Round 2" : "Round 3",
         visible: false,
         published: false,
-        groundPenalty: 10, // Configurable penalty for ground touches
+        groundPenalty: 0, // Configurable penalty for ground touches
       });
     }
   }
