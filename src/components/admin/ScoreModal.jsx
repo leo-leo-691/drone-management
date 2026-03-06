@@ -37,6 +37,7 @@ export default function ScoreModal({ team, roundId, onClose }) {
         const saved = roundData.obstacleScores?.[o.id] || {
           touches: 0,
           crashes: 0,
+          skipped: false,
         };
         initialScores[o.id] = saved;
       });
@@ -72,8 +73,8 @@ export default function ScoreModal({ team, roundId, onClose }) {
     // 2. Sum Obstacle Scores
     let obstacleSum = 0;
     obstacles.forEach((obs) => {
-      const s = scores[obs.id] || { touches: 0, crashes: 0 };
-      const obsScore =
+      const s = scores[obs.id] || { touches: 0, crashes: 0, skipped: false };
+      const obsScore = s.skipped ? 0 :
         obs.maxPoints -
         s.touches * obs.touchPenalty -
         s.crashes * obs.crashPenalty;
@@ -171,7 +172,7 @@ export default function ScoreModal({ team, roundId, onClose }) {
       ...prev,
       [obsId]: {
         ...prev[obsId],
-        [field]: Number(val),
+        [field]: field === "skipped" ? val : Number(val),
       },
     }));
   };
@@ -301,8 +302,8 @@ export default function ScoreModal({ team, roundId, onClose }) {
               Obstacle Performance Matrix
             </h3>
             {obstacles.map((obs) => {
-              const s = scores[obs.id] || { touches: 0, crashes: 0 };
-              const currentScore =
+              const s = scores[obs.id] || { touches: 0, crashes: 0, skipped: false };
+              const currentScore = s.skipped ? 0 :
                 obs.maxPoints -
                 s.touches * obs.touchPenalty -
                 s.crashes * obs.crashPenalty;
@@ -313,17 +314,33 @@ export default function ScoreModal({ team, roundId, onClose }) {
                   className="p-4 rounded-2xl border border-white/5 bg-white/[0.02] hover:border-neon/20 transition-all duration-300"
                 >
                   <div className="flex justify-between items-center mb-4">
-                    <span className="text-sm font-black italic tracking-tighter text-white/90 uppercase">
+                    <span className="text-sm font-black italic tracking-tighter text-white/90 uppercase flex items-center gap-2">
                       {obs.order}. {obs.name}
+                      {s.skipped && (
+                        <span className="px-2 py-0.5 rounded-md bg-destructive/20 text-destructive text-[10px] font-mono font-bold tracking-widest border border-destructive/30 uppercase">
+                          Skipped
+                        </span>
+                      )}
                     </span>
-                    <span
-                      className={`text-sm font-black tabular-nums italic tracking-tighter ${currentScore < 0 ? "text-destructive" : "text-neon"}`}
-                    >
-                      {currentScore} PTS
-                    </span>
+                    <div className="flex items-center gap-4">
+                      <button
+                        onClick={() => updateScore(obs.id, "skipped", !s.skipped)}
+                        className={`text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg transition-all border ${s.skipped
+                            ? "bg-destructive/20 text-destructive border-destructive/50 hover:bg-destructive/30"
+                            : "bg-white/5 text-muted-foreground border-white/10 hover:bg-white/10 hover:text-white"
+                          }`}
+                      >
+                        {s.skipped ? "Unskip" : "Skip"}
+                      </button>
+                      <span
+                        className={`text-sm font-black tabular-nums italic tracking-tighter w-16 text-right ${currentScore < 0 ? "text-destructive" : (s.skipped ? "text-muted-foreground" : "text-neon")}`}
+                      >
+                        {currentScore} PTS
+                      </span>
+                    </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className={`grid grid-cols-2 gap-4 transition-opacity duration-300 ${s.skipped ? "opacity-30 pointer-events-none" : ""}`}>
                     <div className="flex flex-col gap-1.5">
                       <label className="text-[8px] font-mono font-bold text-muted-foreground/60 uppercase tracking-widest ml-1">
                         Touches (-{obs.touchPenalty})
@@ -335,7 +352,8 @@ export default function ScoreModal({ team, roundId, onClose }) {
                         onChange={(e) =>
                           updateScore(obs.id, "touches", e.target.value)
                         }
-                        className="bg-black/40 border border-white/10 text-white p-2 rounded-xl text-center font-mono text-sm focus:border-neon outline-none"
+                        disabled={s.skipped}
+                        className="bg-black/40 border border-white/10 text-white p-2 rounded-xl text-center font-mono text-sm focus:border-neon outline-none disabled:opacity-50"
                       />
                     </div>
                     <div className="flex flex-col gap-1.5">
@@ -349,7 +367,8 @@ export default function ScoreModal({ team, roundId, onClose }) {
                         onChange={(e) =>
                           updateScore(obs.id, "crashes", e.target.value)
                         }
-                        className="bg-black/40 border border-white/10 text-white p-2 rounded-xl text-center font-mono text-sm focus:border-destructive outline-none"
+                        disabled={s.skipped}
+                        className="bg-black/40 border border-white/10 text-white p-2 rounded-xl text-center font-mono text-sm focus:border-destructive outline-none disabled:opacity-50"
                       />
                     </div>
                   </div>
