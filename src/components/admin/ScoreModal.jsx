@@ -3,13 +3,15 @@ import { createPortal } from "react-dom";
 import { subscribeObstacles, updateTeam } from "../../services/db";
 import { getDoc, doc } from "firebase/firestore";
 import { db } from "../../lib/firebase";
-import { Timer, AlertTriangle, Trophy, X } from "lucide-react";
+import { Timer, AlertTriangle, Trophy, X, PlusCircle, MinusCircle } from "lucide-react";
 
 export default function ScoreModal({ team, roundId, onClose }) {
   const [obstacles, setObstacles] = useState([]);
   const [scores, setScores] = useState({}); // { obstacleId: { touches: 0, crashes: 0 } }
   const [groundTouches, setGroundTouches] = useState(0);
   const [groundPenalty, setGroundPenalty] = useState(10);
+  const [manualAdd, setManualAdd] = useState(0);
+  const [manualDeduct, setManualDeduct] = useState(0);
   const [minutes, setMinutes] = useState("");
   const [seconds, setSeconds] = useState("");
   const [loading, setLoading] = useState(false);
@@ -31,6 +33,8 @@ export default function ScoreModal({ team, roundId, onClose }) {
       // Initialize state from team data
       const roundData = team.roundDetails?.[roundId] || {};
       setGroundTouches(roundData.groundTouches || 0);
+      setManualAdd(roundData.manualAdd || 0);
+      setManualDeduct(roundData.manualDeduct || 0);
 
       const initialScores = {};
       obs.forEach((o) => {
@@ -81,6 +85,8 @@ export default function ScoreModal({ team, roundId, onClose }) {
       obstacleSum += obsScore;
     });
     obstacleSum -= groundPenalty * groundTouches;
+    obstacleSum += Number(manualAdd) || 0;
+    obstacleSum -= Number(manualDeduct) || 0;
 
     return obstacleSum;
   };
@@ -107,6 +113,8 @@ export default function ScoreModal({ team, roundId, onClose }) {
       const updates = {
         [`roundDetails.${roundId}`]: {
           groundTouches: Number(groundTouches),
+          manualAdd: Number(manualAdd) || 0,
+          manualDeduct: Number(manualDeduct) || 0,
           obstacleScores: scores,
           time: totalSeconds,
           score: roundScore,
@@ -296,6 +304,36 @@ export default function ScoreModal({ team, roundId, onClose }) {
             </div>
           </div>
 
+          {/* Manual Points Section */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+            <div className="p-4 md:p-5 rounded-2xl border border-white/5 bg-white/[0.02]">
+              <label className="text-[10px] font-mono font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2 mb-4">
+                <PlusCircle size={14} className="text-neon" /> Manual Add (Pts)
+              </label>
+              <input
+                type="number"
+                min="0"
+                value={manualAdd}
+                onChange={(e) => setManualAdd(e.target.value)}
+                className="w-full bg-black/40 border border-white/10 text-white text-center text-xl md:text-2xl font-black italic tracking-tighter rounded-xl p-2.5 md:p-3 focus:border-neon outline-none transition-all tabular-nums"
+                placeholder="0"
+              />
+            </div>
+            <div className="p-4 md:p-5 rounded-2xl border border-white/5 bg-white/[0.02]">
+              <label className="text-[10px] font-mono font-bold text-destructive/80 uppercase tracking-widest flex items-center gap-2 mb-4">
+                <MinusCircle size={14} className="text-destructive" /> Manual Deduct (Pts)
+              </label>
+              <input
+                type="number"
+                min="0"
+                value={manualDeduct}
+                onChange={(e) => setManualDeduct(e.target.value)}
+                className="w-full bg-black/40 border border-white/10 text-white text-center text-xl md:text-2xl font-black italic tracking-tighter rounded-xl p-2.5 md:p-3 focus:border-destructive outline-none transition-all tabular-nums"
+                placeholder="0"
+              />
+            </div>
+          </div>
+
           {/* Obstacles List */}
           <div className="flex flex-col gap-4">
             <h3 className="text-[10px] font-mono font-bold text-muted-foreground uppercase tracking-[0.3em] pl-1">
@@ -326,8 +364,8 @@ export default function ScoreModal({ team, roundId, onClose }) {
                       <button
                         onClick={() => updateScore(obs.id, "skipped", !s.skipped)}
                         className={`text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg transition-all border ${s.skipped
-                            ? "bg-destructive/20 text-destructive border-destructive/50 hover:bg-destructive/30"
-                            : "bg-white/5 text-muted-foreground border-white/10 hover:bg-white/10 hover:text-white"
+                          ? "bg-destructive/20 text-destructive border-destructive/50 hover:bg-destructive/30"
+                          : "bg-white/5 text-muted-foreground border-white/10 hover:bg-white/10 hover:text-white"
                           }`}
                       >
                         {s.skipped ? "Unskip" : "Skip"}
